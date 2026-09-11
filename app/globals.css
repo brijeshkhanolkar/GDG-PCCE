@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CourtFlight Global Styles ─────────────────────────────────────────────── */
+/* Sovereign Juris Design System — Editorial Brutalism × Cinematic Minimalism  */
+
+:root {
+  --charcoal: #0B0B0C;
+  --gold: #C9A24B;
+  --gold-light: #EBC166;
+  --dim-grey: #6B6B6E;
+  --steel-grey: #8E8E93;
+  --stamp-red: #8C3B34;
+  --off-white: #F5F3EE;
+  --bone-white: #F3F3F4;
+  --hairline: #222226;
+  --hairline-light: #2E2E34;
+  --surface-dim: #131314;
+  --surface-mid: #18181B;
+  --surface-high: #1E1E22;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--charcoal);
+  color: var(--off-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* No rounded SaaS cards — strict 0px radii everywhere */
+* {
+  border-radius: 0 !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--charcoal);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--hairline-light);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* Selection */
+::selection {
+  background: var(--gold);
+  color: var(--charcoal);
+}
+
+/* ─── Reduced motion: pause all videos ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  video {
+    display: none !important;
+  }
+  .video-poster-fallback {
+    display: block !important;
+  }
+}
