@@ -1,63 +1,109 @@
 'use client';
-import GlossaryTerm from './GlossaryTerm';
 
 export default function ClusterStats({ prediction }) {
   if (!prediction) return null;
 
-  const p25 = prediction.etaRangeYears?.p25 ?? 2.5;
-  const medianYears = prediction.etaRangeYears?.median ?? 3.8;
-  const p75 = prediction.etaRangeYears?.p75 ?? 5.0;
+  const clusterSize = prediction.matchedClusterSize || 0;
+  const formattedSize = clusterSize.toLocaleString();
+  const median = prediction.etaRangeYears?.median ?? 0;
+  const p25 = prediction.etaRangeYears?.p25 ?? 0;
+  const p75 = prediction.etaRangeYears?.p75 ?? 0;
   const similarCases = prediction.similarCases || [];
-  const method = prediction.method || 'cluster';
-  const clusterId = prediction.clusterId;
+  const confidence = prediction.confidence || 0;
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col md:flex-row gap-8 items-end mb-8">
-        <div>
-          <div className="font-mono text-xs text-gold uppercase tracking-wider mb-2 flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full inline-block ${method === 'cluster' ? 'bg-gold' : 'bg-dim-grey'}`} />
-            <span>{method === 'cluster' ? `K-Means Cluster #${clusterId ?? 0}` : 'Jurisdictional Cohort'}</span>
-          </div>
-          <div className="text-7xl md:text-8xl font-display leading-none text-off-white">
-            {prediction.matchedClusterSize?.toLocaleString() || 0}
-          </div>
-          <div className="font-mono text-xs text-dim-grey mt-2 uppercase tracking-label">Cases in matched cluster</div>
+    <div className="text-off-white font-body">
+      {/* Header */}
+      <div className="mb-12 border-b border-hairline pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div className="font-mono text-gold uppercase text-[10px] tracking-[0.14em] flex items-center gap-2">
+          <span className="w-2 h-2 bg-gold inline-block" />
+          Cohort Analysis // Empirical Trajectory Archive
         </div>
-        
-        <div className="pb-2">
-          <div className="font-mono text-xs text-steel-grey uppercase tracking-wider mb-2">Estimated Window</div>
-          <div className="text-3xl md:text-4xl font-display text-gold">
-            {p25} – {p75}
-            <span className="text-lg text-dim-grey ml-2">yrs</span>
-          </div>
-          <div className="font-mono text-[10px] text-dim-grey mt-1">
-            Median duration: <span className="text-off-white font-medium">{medianYears} yrs</span>
-          </div>
+        <div className="flex items-center gap-4">
+          <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-steel-grey">
+            Method: <span className="text-gold">{prediction.method === 'cluster' ? 'k-Means' : 'Cohort'}</span>
+          </span>
+          <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-steel-grey">
+            Conf: <span className={confidence >= 70 ? 'text-gold' : 'text-off-white'}>{confidence}%</span>
+          </span>
         </div>
       </div>
 
-      {similarCases.length > 0 && (
-        <div className="mt-8">
-          <div className="font-mono text-[10px] text-dim-grey uppercase tracking-widest border-b border-hairline pb-2 mb-4">
-            Precedent Cases (Nearest Procedural Neighbors)
+      {/* Oversized cluster number */}
+      <div className="mb-16">
+        <div className="font-display text-7xl md:text-8xl lg:text-9xl leading-none text-off-white">{formattedSize}</div>
+        <div className="font-body text-dim-grey text-lg mt-2">
+          similar cases found in {prediction.method === 'cluster' ? 'k-means cluster' : 'jurisdictional cohort'}
+        </div>
+      </div>
+
+      {/* Distribution: p25 / median / p75 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 border-y border-hairline divide-y md:divide-y-0 md:divide-x divide-hairline mb-16">
+        <div className="p-6 md:p-8 text-center flex flex-col justify-center">
+          <div className="font-display text-4xl md:text-5xl text-off-white mb-1">
+            {p25}<span className="text-xl text-dim-grey ml-1">yrs</span>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-steel-grey">25th Percentile</div>
+        </div>
+        <div className="p-6 md:p-8 text-center flex flex-col justify-center bg-surface-dim/50">
+          <div className="font-display text-5xl md:text-6xl text-gold mb-1">
+            {median}<span className="text-2xl text-dim-grey ml-1">yrs</span>
+          </div>
+          <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-off-white font-bold">Median Duration</div>
+        </div>
+        <div className="p-6 md:p-8 text-center flex flex-col justify-center">
+          <div className="font-display text-4xl md:text-5xl text-stamp-red mb-1">
+            {p75}<span className="text-xl text-dim-grey ml-1">yrs</span>
+          </div>
+          <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-stamp-red">75th Percentile</div>
+        </div>
+      </div>
+
+      {/* Similar cases list */}
+      {similarCases.length > 0 && (
+        <div>
+          <div className="font-mono text-dim-grey uppercase text-[10px] tracking-[0.14em] mb-6 flex items-center gap-2">
+            <span className="w-2 h-2 bg-dim-grey inline-block" />
+            Precedent Vectors // Closest Procedural Match
+          </div>
+
+          <div className="border-t border-hairline">
+            {/* Header row */}
+            <div className="hidden md:grid grid-cols-12 gap-4 py-3 px-4 border-b border-hairline">
+              <span className="col-span-2 font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase">Case ID</span>
+              <span className="col-span-3 font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase">Type / Court</span>
+              <span className="col-span-2 font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase text-center">Adjournments</span>
+              <span className="col-span-2 font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase text-center">Duration</span>
+              <span className="col-span-3 font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase text-right">Resolved</span>
+            </div>
+
             {similarCases.map((c, i) => {
-              const yrs = c.yearsToDisposal ?? 3.5;
-              const diff = Math.abs(yrs - medianYears);
-              const similarity = Math.max(65, Math.min(99, Math.round(98 - diff * 8)));
+              // Compute similarity to median
+              const distToMedian = Math.abs(c.yearsToDisposal - median);
+              const similarity = Math.max(60, Math.min(99, Math.round(100 - distToMedian * 12)));
+
               return (
-                <div key={i} className="flex justify-between items-center text-sm p-3 bg-surface-dim hover:bg-surface-mid transition-colors border border-hairline">
-                  <div className="flex flex-col">
-                    <span className="font-mono text-sm text-gold">{c.id || c.caseId}</span>
-                    <span className="font-body text-xs text-steel-grey mt-0.5">
-                      <GlossaryTerm term={c.case_type || c.type} /> &middot; {c.filing_court || c.court}
-                    </span>
+                <div key={i} className="grid grid-cols-2 md:grid-cols-12 gap-2 md:gap-4 py-4 px-4 border-b border-hairline hover:bg-surface-dim/30 transition-colors">
+                  <div className="md:col-span-2">
+                    <span className="font-mono text-sm text-gold">{c.id}</span>
+                    <span className="font-mono text-[10px] text-dim-grey ml-2">{similarity}%</span>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <span className="font-mono text-sm text-off-white">{yrs} yrs</span>
-                    <span className="font-mono text-[10px] text-dim-grey mt-0.5">{similarity}% match</span>
+                  <div className="md:col-span-3 flex flex-col">
+                    <span className="font-body text-sm text-off-white truncate">{c.case_type}</span>
+                    <span className="font-mono text-[10px] text-dim-grey truncate">{c.filing_court}</span>
+                  </div>
+                  <div className="md:col-span-2 text-left md:text-center">
+                    <span className="font-mono text-sm text-off-white">{c.num_adjournments}</span>
+                    <span className="font-mono text-[10px] text-dim-grey ml-1 md:hidden">adj</span>
+                  </div>
+                  <div className="md:col-span-2 text-left md:text-center">
+                    <span className="font-mono text-sm text-off-white">{c.yearsToDisposal}</span>
+                    <span className="font-mono text-[10px] text-dim-grey ml-1">yrs</span>
+                  </div>
+                  <div className="md:col-span-3 text-left md:text-right col-span-2">
+                    <span className="font-mono text-[10px] text-steel-grey">
+                      {c.disposal_date ? new Date(c.disposal_date).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : '—'}
+                    </span>
                   </div>
                 </div>
               );

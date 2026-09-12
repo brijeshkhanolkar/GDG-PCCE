@@ -2,7 +2,6 @@ import Link from 'next/link';
 import BackgroundVideo from '@/components/BackgroundVideo';
 import SearchBar from '@/components/SearchBar';
 import CaseListRow from '@/components/CaseListRow';
-import NationalPendingCounter from '@/components/NationalPendingCounter';
 import { predictEta, getCaseById, cases } from '@/lib/predictEta';
 
 /**
@@ -100,8 +99,6 @@ export default function LandingPage() {
                 Like a flight.
               </h1>
 
-              {/* Supporting Live Pendency Telemetry */}
-              <NationalPendingCounter />
 
               <p className="font-body text-lg text-dim-grey max-w-xl mb-10 leading-relaxed">
                 Real-time docket telemetry, judicial trajectory mapping, and
