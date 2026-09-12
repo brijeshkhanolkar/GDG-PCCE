@@ -1,31 +1,45 @@
-'use client';
+export default function DelayReportRow({ adjournment, date, reason, stage, previousDate, index = 0 }) {
+  const rawDate = adjournment?.date || date;
+  const rawReason = adjournment?.reason || reason || 'Procedural delay';
+  const rawStage = adjournment?.stage_at_time || stage || 'In Progress';
 
-export default function DelayReportRow({ adjournment, previousDate, index }) {
-  const { date, reason, stage_at_time } = adjournment;
+  let formattedDate = 'Recorded';
+  let driftDays = 0;
 
-  // Simple drift calculation
-  const driftDays = previousDate
-    ? Math.round((new Date(date) - new Date(previousDate)) / (1000 * 60 * 60 * 24))
-    : 14; // fallback
+  if (rawDate) {
+    const dateObj = new Date(rawDate);
+    if (!isNaN(dateObj.getTime())) {
+      formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      if (previousDate) {
+        const prevDateObj = new Date(previousDate);
+        if (!isNaN(prevDateObj.getTime())) {
+          driftDays = Math.max(0, Math.round((dateObj - prevDateObj) / (1000 * 60 * 60 * 24)));
+        }
+      }
+    } else {
+      formattedDate = String(rawDate);
+    }
+  }
 
   return (
-    <div className="py-8 md:py-12 border-b border-gold border-opacity-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-off-white">
-      <div className="w-full md:w-1/4 flex flex-col">
-        <span className="font-body text-lg">{date}</span>
+    <div className="border-b border-gold/20 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="md:w-1/4 flex flex-col">
+        <span className="font-mono text-sm text-bone-white">{formattedDate}</span>
         {driftDays > 0 && (
-          <span className="font-mono text-stamp-red text-xs uppercase tracking-widest mt-1">
-            +{driftDays} days drift
-          </span>
+          <span className="font-mono text-xs text-stamp-red mt-1">+{driftDays} days drift</span>
         )}
       </div>
-
-      <div className="w-full md:w-1/2 text-left md:text-center">
-        <h4 className="font-display text-xl md:text-2xl font-bold text-bone-white">{reason}</h4>
+      <div className="md:w-1/2">
+        <div className="font-display text-lg md:text-xl font-medium text-off-white">
+          {rawReason}
+        </div>
       </div>
-
-      <div className="w-full md:w-1/4 text-left md:text-right">
-        <span className="font-mono uppercase text-sm text-dim-grey tracking-widest">
-          {stage_at_time}
+      <div className="md:w-1/4 flex flex-col md:text-right">
+        <span className="font-mono text-xs uppercase text-gold-light">
+          {rawStage}
+        </span>
+        <span className="font-mono text-[10px] text-dim-grey mt-0.5">
+          Ref: ADJ-{String(index + 1).padStart(2, '0')}
         </span>
       </div>
     </div>

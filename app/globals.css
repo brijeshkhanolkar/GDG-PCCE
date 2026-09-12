@@ -38,9 +38,22 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* No rounded SaaS cards — strict 0px radii everywhere */
-* {
-  border-radius: 0 !important;
+/* Sharp corners on structural elements — but NOT on seal/stamp shapes */
+button,
+input,
+textarea,
+select,
+.card,
+[class*="border"] {
+  border-radius: 0;
+}
+
+/* Override Tailwind's rounded-full for the seal component */
+.status-seal {
+  border-radius: 50% !important;
+}
+.status-seal-dot {
+  border-radius: 50% !important;
 }
 
 /* Scrollbar styling */
@@ -63,6 +76,24 @@ body {
   color: var(--charcoal);
 }
 
+/* ─── Timeline scroll-reveal animation ──────────────────────────────────────── */
+.timeline-stage {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.timeline-stage.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+.timeline-stage.future-stage {
+  opacity: 0.2 !important;
+}
+.timeline-stage.future-stage.revealed {
+  opacity: 0.2 !important;
+  transform: translateY(0);
+}
+
 /* ─── Reduced motion: pause all videos ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   video {
@@ -71,4 +102,17 @@ body {
   .video-poster-fallback {
     display: block !important;
   }
+  .timeline-stage {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .timeline-stage.future-stage {
+    opacity: 0.2 !important;
+  }
+}
+
+/* ─── Utility class for gold hairline dividers ──────────────────────────────── */
+.divider-gold {
+  border-bottom: 1px solid rgba(201, 162, 75, 0.2);
 }

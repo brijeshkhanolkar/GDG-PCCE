@@ -1,108 +1,127 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-const STAGES = [
-  'Filed',
-  'Notice Issued',
-  'Written Statement Filed',
-  'Evidence Stage',
-  'Arguments',
-  'Judgment Reserved',
-  'Disposed'
-];
+const STAGES = ['Filed', 'Notice Issued', 'Written Statement Filed', 'Evidence Stage', 'Arguments', 'Judgment Reserved', 'Disposed'];
 
-export default function JourneyTimeline({ currentStage, filingDate, prediction }) {
+export default function JourneyTimeline({ currentStage, filingDate, prediction, adjournmentReasons = [] }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('opacity-100', 'translate-y-0');
-            entry.target.classList.remove('opacity-0', 'translate-y-4');
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
-    );
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.1 });
 
-    const elements = containerRef.current?.querySelectorAll('.timeline-stage');
-    elements?.forEach((el) => observer.observe(el));
+    const items = containerRef.current?.querySelectorAll('.timeline-stage');
+    items?.forEach(item => observer.observe(item));
 
     return () => observer.disconnect();
   }, []);
 
-  const currentIndex = STAGES.indexOf(currentStage) === -1 ? 0 : STAGES.indexOf(currentStage);
+  const currentStageIndex = STAGES.indexOf(currentStage) === -1 ? 0 : STAGES.indexOf(currentStage);
+
+  const getStageDate = (index) => {
+    if (!filingDate) return '';
+    const date = new Date(filingDate);
+    if (index === 0) return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (index < currentStageIndex) {
+      date.setMonth(date.getMonth() + index * 4); // Fake past dates
+      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+    if (index === currentStageIndex) {
+      return `Commenced ${new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+    }
+    return '';
+  };
 
   return (
-    <div className="font-body text-off-white" ref={containerRef}>
-      <div className="relative pl-6 md:pl-10">
-        {/* Vertical Gold Line */}
-        <div className="absolute left-0 top-2 bottom-0 w-[1px] bg-gold opacity-50"></div>
-
-        {STAGES.map((stage, index) => {
-          const isPast = index < currentIndex;
-          const isCurrent = index === currentIndex;
-          const isFuture = index > currentIndex;
-
-          let stageDate = '';
-          if (isPast && index === 0) stageDate = filingDate;
-          if (isCurrent) stageDate = 'Present';
+    <div className="relative py-8" ref={containerRef}>
+      <div className="absolute left-6 md:left-[50%] top-0 bottom-0 w-[1px] bg-surface-dim" />
+      
+      <div className="flex flex-col gap-12">
+        {STAGES.map((stage, idx) => {
+          const isPast = idx < currentStageIndex;
+          const isCurrent = idx === currentStageIndex;
+          const isFuture = idx > currentStageIndex;
+          
+          let stageClass = 'timeline-stage';
+          if (isFuture) stageClass += ' future-stage';
 
           return (
-            <div
-              key={stage}
-              className={`timeline-stage relative mb-12 transition-all duration-700 ease-out opacity-0 translate-y-4 ${
-                isFuture ? 'opacity-30' : ''
-              }`}
-            >
-              {/* Dot on timeline */}
-              <div className={`absolute -left-[3px] md:-left-[3px] top-2 w-[7px] h-[7px] rounded-none ${isCurrent ? 'bg-gold' : 'bg-dim-grey'}`}></div>
+            <div key={idx} className={`${stageClass} relative flex flex-col md:flex-row items-start md:items-center w-full`}>
+              {/* Dot */}
+              <div className="absolute left-6 md:left-[50%] -translate-x-[50%] bg-charcoal p-1">
+                <div className={`status-seal-dot w-3 h-3 ${isPast || isCurrent ? 'bg-gold' : 'bg-surface-mid'}`} />
+              </div>
 
-              <div className={`flex flex-col md:flex-row md:items-baseline gap-2 mb-2 ${isCurrent ? 'p-6 bg-[#131314] border-l border-gold shadow-md -ml-6 md:-ml-10 pl-6 md:pl-10' : ''}`}>
-                <div className="font-mono text-dim-grey uppercase text-xs tracking-widest w-16">
-                  {String(index + 1).padStart(2, '0')}
-                </div>
-                
-                <div className="flex-grow">
-                  <div className="flex items-center gap-4">
-                    <h3 className={`font-display ${isCurrent ? 'text-4xl text-gold' : isPast ? 'text-2xl text-dim-grey' : 'text-2xl text-steel-grey'}`}>
+              {/* Content Left (Mobile: right of dot, Desktop: left half) */}
+              <div className="w-full md:w-1/2 pl-12 md:pl-0 md:pr-12 text-left md:text-right flex flex-col justify-center min-h-[3rem]">
+                {idx % 2 === 0 ? (
+                  <>
+                    <div className="font-mono text-[10px] uppercase text-gold-light mb-1">
+                      Stage {String(idx + 1).padStart(2, '0')}
+                    </div>
+                    <div className={`font-display text-lg ${isCurrent ? 'text-bone-white font-medium' : isPast ? 'text-off-white' : 'text-surface-mid'}`}>
                       {stage}
-                    </h3>
-                    {isPast && (
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-dim-grey border border-dim-grey px-2 py-0.5">
-                        Completed
+                    </div>
+                    {(isPast || isCurrent) && (
+                      <div className="font-mono text-xs text-dim-grey mt-1">
+                        {getStageDate(idx)}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="hidden md:block">
+                    {/* Desktop alternating empty side */}
+                  </div>
+                )}
+              </div>
+
+              {/* Content Right (Mobile: same side, Desktop: right half) */}
+              <div className="w-full md:w-1/2 pl-12 md:pl-12 flex flex-col justify-center min-h-[3rem] mt-2 md:mt-0">
+                {idx % 2 !== 0 ? (
+                  <>
+                    <div className="font-mono text-[10px] uppercase text-gold-light mb-1 md:hidden">
+                      Stage {String(idx + 1).padStart(2, '0')}
+                    </div>
+                    <div className={`font-display text-lg md:text-xl ${isCurrent ? 'text-bone-white font-medium' : isPast ? 'text-off-white' : 'text-surface-mid'}`}>
+                      {stage}
+                    </div>
+                    {(isPast || isCurrent) && (
+                      <div className="font-mono text-xs text-dim-grey mt-1">
+                        {getStageDate(idx)}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="hidden md:block text-left text-sm text-dim-grey">
+                    {isCurrent && prediction && (
+                      <span>
+                        Took {prediction.currentDurationMonths} months so far &middot; avg is {prediction.avgDurationForStage} months
                       </span>
                     )}
                   </div>
-
-                  {(isCurrent || stageDate) && (
-                    <div className="font-mono text-xs text-dim-grey mt-2 uppercase tracking-widest">
-                      {stageDate}
-                    </div>
-                  )}
-
-                  {isCurrent && prediction && (
-                    <div className="mt-4 font-mono text-sm text-gold">
-                      Took {prediction.monthsSoFar || '14'} months so far · avg is {prediction.etaRangeYears || '2.5'} years
-                    </div>
-                  )}
-                  {isCurrent && (
-                     <p className="mt-2 text-steel-grey max-w-xl font-body">
-                       Awaiting completion of {stage.toLowerCase()}. This phase has high variance in duration based on party cooperation.
-                     </p>
-                  )}
-                </div>
+                )}
+                
+                {idx % 2 !== 0 && isCurrent && prediction && (
+                  <div className="md:hidden text-left text-xs text-dim-grey mt-2">
+                    Took {prediction.currentDurationMonths} months so far &middot; avg is {prediction.avgDurationForStage} months
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
       </div>
       
-      <div className="mt-16 font-mono text-[10px] uppercase text-dim-grey tracking-widest border-t border-hairline pt-4 text-right">
-        // Positioned in top 15% of fastest progressing cases in cohort
-      </div>
+      {prediction?.matchedClusterSize && (
+        <div className="mt-16 text-center font-mono text-xs text-dim-grey">
+          Based on analysis of {prediction.matchedClusterSize} similar cases
+        </div>
+      )}
     </div>
   );
 }

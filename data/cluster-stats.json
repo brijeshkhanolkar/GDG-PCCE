@@ -1,0 +1,722 @@
+{
+  "metadata": {
+    "k": 10,
+    "wcss": 2396.13,
+    "totalCases": 1550,
+    "disposedCases": 457,
+    "createdAt": "2026-09-12T07:36:03.714Z"
+  },
+  "scalingParams": {
+    "caseAge": {
+      "min": 0.6050650239561944,
+      "max": 10.683093771389458
+    },
+    "adjournments": {
+      "min": 0,
+      "max": 9
+    }
+  },
+  "categories": {
+    "allCaseTypes": [
+      "Civil",
+      "Commercial",
+      "Criminal",
+      "Family",
+      "Property",
+      "Service"
+    ],
+    "allCourts": [
+      "Allahabad High Court",
+      "Bombay High Court",
+      "Calcutta High Court",
+      "Delhi High Court",
+      "Gujarat High Court",
+      "Karnataka High Court",
+      "Kerala High Court",
+      "Madhya Pradesh High Court",
+      "Madras High Court",
+      "Punjab and Haryana High Court",
+      "Rajasthan High Court",
+      "Telangana High Court"
+    ],
+    "allJurisdictions": [
+      "Delhi",
+      "Gujarat",
+      "Haryana",
+      "Karnataka",
+      "Kerala",
+      "Madhya Pradesh",
+      "Maharashtra",
+      "Rajasthan",
+      "Tamil Nadu",
+      "Telangana",
+      "Uttar Pradesh",
+      "West Bengal"
+    ],
+    "stages": [
+      "Filed",
+      "Notice Issued",
+      "Written Statement Filed",
+      "Evidence Stage",
+      "Arguments",
+      "Judgment Reserved",
+      "Disposed"
+    ]
+  },
+  "clusters": [
+    {
+      "clusterId": 0,
+      "centroid": [
+        0.3032,
+        0.1841,
+        0.083,
+        0.1227,
+        0.1805,
+        0.1264,
+        0.0072,
+        0.0072,
+        0.0036,
+        0.4982,
+        0.0072,
+        0,
+        0.0108,
+        0.0036,
+        0.0036,
+        0.148,
+        0.0036,
+        0.3069,
+        0.5162,
+        0.0108,
+        0.148,
+        0,
+        0.0036,
+        0.0036,
+        0,
+        0.0072,
+        0.0036,
+        0.3032,
+        0,
+        0.0036,
+        0.5087,
+        0.3394,
+        0.5205
+      ],
+      "size": 277,
+      "disposedCount": 71,
+      "disposalStats": {
+        "p25": 3,
+        "median": 3.7,
+        "p75": 4.9
+      },
+      "avgAdjournments": 3.1,
+      "dominantCaseTypes": [
+        "Civil",
+        "Commercial",
+        "Property"
+      ],
+      "dominantCourts": [
+        "Delhi High Court",
+        "Telangana High Court",
+        "Punjab and Haryana High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-00262",
+        "NYR-00335",
+        "NYR-00798",
+        "NYR-01243",
+        "NYR-00068",
+        "NYR-00844",
+        "NYR-00081",
+        "NYR-00588"
+      ]
+    },
+    {
+      "clusterId": 1,
+      "centroid": [
+        0.2744,
+        0.214,
+        0.107,
+        0.1163,
+        0.1163,
+        0.1721,
+        0,
+        0.0186,
+        0.3721,
+        0,
+        0,
+        0,
+        0,
+        0.3488,
+        0.0093,
+        0.0047,
+        0.2419,
+        0.0047,
+        0,
+        0,
+        0.0093,
+        0,
+        0,
+        0.3953,
+        0.0047,
+        0.2465,
+        0,
+        0.0093,
+        0,
+        0.3349,
+        0.4933,
+        0.384,
+        0.6109
+      ],
+      "size": 215,
+      "disposedCount": 76,
+      "disposalStats": {
+        "p25": 2.8,
+        "median": 3.7,
+        "p75": 4.5
+      },
+      "avgAdjournments": 3.5,
+      "dominantCaseTypes": [
+        "Civil",
+        "Commercial",
+        "Service"
+      ],
+      "dominantCourts": [
+        "Calcutta High Court",
+        "Madhya Pradesh High Court",
+        "Rajasthan High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-00220",
+        "NYR-01253",
+        "NYR-01282",
+        "NYR-00607",
+        "NYR-01014",
+        "NYR-00785",
+        "NYR-01430",
+        "NYR-00535"
+      ]
+    },
+    {
+      "clusterId": 2,
+      "centroid": [
+        0.2993,
+        0.0408,
+        0.1905,
+        0.102,
+        0.1769,
+        0.1905,
+        0.0068,
+        0.0272,
+        0,
+        0,
+        0.0136,
+        0.9388,
+        0,
+        0.0068,
+        0,
+        0,
+        0.0068,
+        0,
+        0,
+        0.0068,
+        0,
+        0.9592,
+        0.0068,
+        0,
+        0,
+        0.0068,
+        0,
+        0.0068,
+        0,
+        0.0136,
+        0.4833,
+        0.3537,
+        0.568
+      ],
+      "size": 147,
+      "disposedCount": 44,
+      "disposalStats": {
+        "p25": 3.1,
+        "median": 4,
+        "p75": 4.7
+      },
+      "avgAdjournments": 3.2,
+      "dominantCaseTypes": [
+        "Civil",
+        "Criminal",
+        "Service"
+      ],
+      "dominantCourts": [
+        "Karnataka High Court",
+        "Bombay High Court",
+        "Gujarat High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-01420",
+        "NYR-00312",
+        "NYR-00141",
+        "NYR-00835",
+        "NYR-01103",
+        "NYR-01092",
+        "NYR-00552",
+        "NYR-01021"
+      ]
+    },
+    {
+      "clusterId": 3,
+      "centroid": [
+        0.2529,
+        0.1494,
+        0.1494,
+        0.1264,
+        0.2069,
+        0.1149,
+        0.908,
+        0.046,
+        0,
+        0,
+        0.0115,
+        0.0115,
+        0,
+        0.0115,
+        0.0115,
+        0,
+        0,
+        0,
+        0,
+        0.0115,
+        0,
+        0,
+        0.0115,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.977,
+        0,
+        0.4719,
+        0.3512,
+        0.6073
+      ],
+      "size": 87,
+      "disposedCount": 32,
+      "disposalStats": {
+        "p25": 3,
+        "median": 4,
+        "p75": 4.9
+      },
+      "avgAdjournments": 3.2,
+      "dominantCaseTypes": [
+        "Civil",
+        "Property",
+        "Criminal"
+      ],
+      "dominantCourts": [
+        "Allahabad High Court",
+        "Bombay High Court",
+        "Gujarat High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-00647",
+        "NYR-00644",
+        "NYR-01081",
+        "NYR-01246",
+        "NYR-00611",
+        "NYR-00448",
+        "NYR-00346",
+        "NYR-00416"
+      ]
+    },
+    {
+      "clusterId": 4,
+      "centroid": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.0147,
+        0.2941,
+        0.0147,
+        0.0147,
+        0.0147,
+        0,
+        0.0147,
+        0,
+        0.1029,
+        0.25,
+        0.2794,
+        0.0294,
+        0,
+        0.0882,
+        0.0588,
+        0.0147,
+        0,
+        0,
+        0.2353,
+        0.0294,
+        0.2353,
+        0.0147,
+        0.2941,
+        0.4919,
+        0.4101,
+        0.6471
+      ],
+      "size": 68,
+      "disposedCount": 25,
+      "disposalStats": {
+        "p25": 3.1,
+        "median": 3.9,
+        "p75": 4.6
+      },
+      "avgAdjournments": 3.7,
+      "dominantCaseTypes": [
+        "Criminal"
+      ],
+      "dominantCourts": [
+        "Calcutta High Court",
+        "Telangana High Court",
+        "Rajasthan High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-00199",
+        "NYR-00015",
+        "NYR-00292",
+        "NYR-00761",
+        "NYR-00814",
+        "NYR-00340",
+        "NYR-01373",
+        "NYR-00803"
+      ]
+    },
+    {
+      "clusterId": 5,
+      "centroid": [
+        0.2308,
+        0.0923,
+        0.1846,
+        0.2154,
+        0.1846,
+        0.0923,
+        0,
+        0.0615,
+        0,
+        0,
+        0,
+        0,
+        0.0077,
+        0,
+        0.9231,
+        0,
+        0,
+        0.0077,
+        0,
+        0,
+        0,
+        0.0077,
+        0.0077,
+        0,
+        0,
+        0,
+        0.9769,
+        0.0077,
+        0,
+        0,
+        0.4646,
+        0.353,
+        0.5603
+      ],
+      "size": 130,
+      "disposedCount": 38,
+      "disposalStats": {
+        "p25": 3.6,
+        "median": 4.2,
+        "p75": 4.8
+      },
+      "avgAdjournments": 3.2,
+      "dominantCaseTypes": [
+        "Civil",
+        "Family",
+        "Property"
+      ],
+      "dominantCourts": [
+        "Madras High Court",
+        "Bombay High Court",
+        "Telangana High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-00321",
+        "NYR-00662",
+        "NYR-00053",
+        "NYR-00870",
+        "NYR-00391",
+        "NYR-01464",
+        "NYR-01008",
+        "NYR-00887"
+      ]
+    },
+    {
+      "clusterId": 6,
+      "centroid": [
+        0.2632,
+        0.1895,
+        0.0947,
+        0.1895,
+        0.1053,
+        0.1579,
+        0,
+        0.0105,
+        0,
+        0,
+        0.9579,
+        0.0211,
+        0.0105,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.4725,
+        0.3298,
+        0.4789
+      ],
+      "size": 95,
+      "disposedCount": 18,
+      "disposalStats": {
+        "p25": 2.4,
+        "median": 3.3,
+        "p75": 3.9
+      },
+      "avgAdjournments": 3,
+      "dominantCaseTypes": [
+        "Civil",
+        "Family",
+        "Commercial"
+      ],
+      "dominantCourts": [
+        "Gujarat High Court",
+        "Karnataka High Court",
+        "Bombay High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-00099",
+        "NYR-00038",
+        "NYR-00499",
+        "NYR-00383",
+        "NYR-00056",
+        "NYR-00901",
+        "NYR-00800",
+        "NYR-01269"
+      ]
+    },
+    {
+      "clusterId": 7,
+      "centroid": [
+        0.2974,
+        0.1487,
+        0,
+        0.1487,
+        0.2187,
+        0.1866,
+        0,
+        0.9883,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.0029,
+        0.0029,
+        0,
+        0,
+        0.0058,
+        0,
+        0,
+        0,
+        0,
+        0.0029,
+        0,
+        0.9913,
+        0.0029,
+        0,
+        0,
+        0,
+        0.0029,
+        0.4864,
+        0.3301,
+        0.5296
+      ],
+      "size": 343,
+      "disposedCount": 97,
+      "disposalStats": {
+        "p25": 3.3,
+        "median": 4.4,
+        "p75": 5.4
+      },
+      "avgAdjournments": 3,
+      "dominantCaseTypes": [
+        "Civil",
+        "Property",
+        "Service"
+      ],
+      "dominantCourts": [
+        "Bombay High Court",
+        "Telangana High Court",
+        "Madras High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-01388",
+        "NYR-01454",
+        "NYR-00010",
+        "NYR-01047",
+        "NYR-00347",
+        "NYR-00169",
+        "NYR-00242",
+        "NYR-01161"
+      ]
+    },
+    {
+      "clusterId": 8,
+      "centroid": [
+        0.1776,
+        0.1589,
+        0.1682,
+        0.1495,
+        0.215,
+        0.1308,
+        0,
+        0,
+        0,
+        0,
+        0.0093,
+        0.0093,
+        0.9533,
+        0,
+        0,
+        0,
+        0.0093,
+        0.0187,
+        0,
+        0,
+        0.0093,
+        0,
+        0.9907,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.4944,
+        0.3126,
+        0.5218
+      ],
+      "size": 107,
+      "disposedCount": 29,
+      "disposalStats": {
+        "p25": 3.2,
+        "median": 3.9,
+        "p75": 4.7
+      },
+      "avgAdjournments": 2.8,
+      "dominantCaseTypes": [
+        "Property",
+        "Civil",
+        "Criminal"
+      ],
+      "dominantCourts": [
+        "Kerala High Court",
+        "Telangana High Court",
+        "Karnataka High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-00532",
+        "NYR-00439",
+        "NYR-00206",
+        "NYR-01071",
+        "NYR-00759",
+        "NYR-00083",
+        "NYR-00609",
+        "NYR-00110"
+      ]
+    },
+    {
+      "clusterId": 9,
+      "centroid": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.0123,
+        0,
+        0.0123,
+        0,
+        0.0123,
+        0.0247,
+        0.9136,
+        0,
+        0.0123,
+        0,
+        0.0123,
+        0,
+        0.4858,
+        0.3717,
+        0.5823
+      ],
+      "size": 81,
+      "disposedCount": 27,
+      "disposalStats": {
+        "p25": 3.4,
+        "median": 4.4,
+        "p75": 5.1
+      },
+      "avgAdjournments": 3.3,
+      "dominantCaseTypes": [
+        "Criminal"
+      ],
+      "dominantCourts": [
+        "Bombay High Court"
+      ],
+      "exampleDisposedCaseIds": [
+        "NYR-01445",
+        "NYR-00583",
+        "NYR-00035",
+        "NYR-00342",
+        "NYR-00368",
+        "NYR-00602",
+        "NYR-01503",
+        "NYR-01403"
+      ]
+    }
+  ]
+}
