@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import StatusSeal from './StatusSeal';
+import GlossaryTerm from './GlossaryTerm';
 
 /**
  * CaseListRow — Flat departure-board-style row for listing cases.
@@ -42,7 +43,7 @@ export default function CaseListRow({ caseData, prediction, isLast = false }) {
           {/* Case Type + Court */}
           <div className="flex flex-col gap-0.5 md:flex-1 min-w-0 md:px-4">
             <span className="font-display text-off-white text-base truncate">
-              {caseData.case_type}
+              <GlossaryTerm term={caseData.case_type} />
             </span>
             <span className="font-body text-dim-grey text-xs truncate">
               {caseData.filing_court}

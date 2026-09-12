@@ -1,7 +1,67 @@
 'use client';
+
 import { useEffect, useRef } from 'react';
 
-const STAGES = ['Filed', 'Notice Issued', 'Written Statement Filed', 'Evidence Stage', 'Arguments', 'Judgment Reserved', 'Disposed'];
+const STAGES = [
+  'Filed',
+  'Notice Issued',
+  'Written Statement Filed',
+  'Evidence Stage',
+  'Arguments',
+  'Judgment Reserved',
+  'Disposed'
+];
+
+/**
+ * StageDurationComparison — Feature 5 two-bar visual
+ * Compares current case duration at this stage against cluster average.
+ */
+function StageDurationComparison({ stageComparison, alignRight = false }) {
+  if (!stageComparison) return null;
+
+  const userMonths = stageComparison.timeAtCurrentStageMonths || 1;
+  const avgMonths = stageComparison.avgTimeAtStageForClusterMonths || 1;
+  const maxMonths = Math.max(userMonths, avgMonths, 1);
+
+  const userPct = Math.max(6, Math.min(100, Math.round((userMonths / maxMonths) * 100)));
+  const avgPct = Math.max(6, Math.min(100, Math.round((avgMonths / maxMonths) * 100)));
+
+  return (
+    <div className={`mt-3 pt-2.5 border-t border-hairline/60 w-full max-w-[280px] flex flex-col gap-2.5 ${alignRight ? 'md:ml-auto' : ''}`}>
+      {/* Your Case Bar */}
+      <div>
+        <div className="flex justify-between items-center text-[10px] font-mono tracking-[0.1em] uppercase mb-1">
+          <span className="text-gold">Your case</span>
+          <span className="text-off-white font-medium">
+            {userMonths} {userMonths === 1 ? 'month' : 'months'}
+          </span>
+        </div>
+        <div className="h-[2px] bg-charcoal/90 w-full overflow-hidden">
+          <div
+            className="h-full bg-gold transition-all duration-500"
+            style={{ width: `${userPct}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Cluster Average Bar */}
+      <div>
+        <div className="flex justify-between items-center text-[10px] font-mono tracking-[0.1em] uppercase mb-1">
+          <span className="text-steel-grey">Average</span>
+          <span className="text-dim-grey">
+            {avgMonths} {avgMonths === 1 ? 'month' : 'months'}
+          </span>
+        </div>
+        <div className="h-[2px] bg-charcoal/90 w-full overflow-hidden">
+          <div
+            className="h-full bg-dim-grey transition-all duration-500"
+            style={{ width: `${avgPct}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function JourneyTimeline({ currentStage, filingDate, prediction, adjournmentReasons = [] }) {
   const containerRef = useRef(null);
@@ -22,13 +82,14 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
   }, []);
 
   const currentStageIndex = STAGES.indexOf(currentStage) === -1 ? 0 : STAGES.indexOf(currentStage);
+  const isDisposed = currentStage === 'Disposed';
 
   const getStageDate = (index) => {
     if (!filingDate) return '';
     const date = new Date(filingDate);
     if (index === 0) return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     if (index < currentStageIndex) {
-      date.setMonth(date.getMonth() + index * 4); // Fake past dates
+      date.setMonth(date.getMonth() + index * 4);
       return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }
     if (index === currentStageIndex) {
@@ -46,13 +107,14 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
           const isPast = idx < currentStageIndex;
           const isCurrent = idx === currentStageIndex;
           const isFuture = idx > currentStageIndex;
+          const showComparison = isCurrent && !isDisposed && prediction?.stageComparison;
           
           let stageClass = 'timeline-stage';
           if (isFuture) stageClass += ' future-stage';
 
           return (
             <div key={idx} className={`${stageClass} relative flex flex-col md:flex-row items-start md:items-center w-full`}>
-              {/* Dot */}
+              {/* Central Node / Dot */}
               <div className="absolute left-6 md:left-[50%] -translate-x-[50%] bg-charcoal p-1">
                 <div className={`status-seal-dot w-3 h-3 ${isPast || isCurrent ? 'bg-gold' : 'bg-surface-mid'}`} />
               </div>
@@ -72,11 +134,16 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
                         {getStageDate(idx)}
                       </div>
                     )}
+                    {/* Stage duration comparison for even index */}
+                    {showComparison && (
+                      <StageDurationComparison
+                        stageComparison={prediction.stageComparison}
+                        alignRight={true}
+                      />
+                    )}
                   </>
                 ) : (
-                  <div className="hidden md:block">
-                    {/* Desktop alternating empty side */}
-                  </div>
+                  <div className="hidden md:block" />
                 )}
               </div>
 
@@ -95,21 +162,16 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
                         {getStageDate(idx)}
                       </div>
                     )}
+                    {/* Stage duration comparison for odd index */}
+                    {showComparison && (
+                      <StageDurationComparison
+                        stageComparison={prediction.stageComparison}
+                        alignRight={false}
+                      />
+                    )}
                   </>
                 ) : (
-                  <div className="hidden md:block text-left text-sm text-dim-grey">
-                    {isCurrent && prediction && (
-                      <span>
-                        Took {prediction.currentDurationMonths} months so far &middot; avg is {prediction.avgDurationForStage} months
-                      </span>
-                    )}
-                  </div>
-                )}
-                
-                {idx % 2 !== 0 && isCurrent && prediction && (
-                  <div className="md:hidden text-left text-xs text-dim-grey mt-2">
-                    Took {prediction.currentDurationMonths} months so far &middot; avg is {prediction.avgDurationForStage} months
-                  </div>
+                  <div className="hidden md:block" />
                 )}
               </div>
             </div>
@@ -119,7 +181,7 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
       
       {prediction?.matchedClusterSize && (
         <div className="mt-16 text-center font-mono text-xs text-dim-grey">
-          Based on analysis of {prediction.matchedClusterSize} similar cases
+          Based on analysis of {prediction.matchedClusterSize.toLocaleString()} similar cases
         </div>
       )}
     </div>

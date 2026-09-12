@@ -1,4 +1,5 @@
 'use client';
+import GlossaryTerm from './GlossaryTerm';
 
 export default function ClusterStats({ prediction }) {
   if (!prediction) return null;
@@ -51,7 +52,7 @@ export default function ClusterStats({ prediction }) {
                   <div className="flex flex-col">
                     <span className="font-mono text-sm text-gold">{c.id || c.caseId}</span>
                     <span className="font-body text-xs text-steel-grey mt-0.5">
-                      {c.case_type || c.type} &middot; {c.filing_court || c.court}
+                      <GlossaryTerm term={c.case_type || c.type} /> &middot; {c.filing_court || c.court}
                     </span>
                   </div>
                   <div className="flex flex-col items-end">

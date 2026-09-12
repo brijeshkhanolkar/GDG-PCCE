@@ -4,6 +4,7 @@ import BoardingPass from '@/components/BoardingPass';
 import JourneyTimeline from '@/components/JourneyTimeline';
 import DelayReportRow from '@/components/DelayReportRow';
 import ClusterStats from '@/components/ClusterStats';
+import WhyEtaBreakdown from '@/components/WhyEtaBreakdown';
 import { predictEta, getCaseById } from '@/lib/predictEta';
 import Link from 'next/link';
 
@@ -70,6 +71,12 @@ export default function CaseDetailPage({ params }) {
             Case Telemetry
           </span>
         </div>
+        <div className="hidden lg:flex items-center gap-8">
+          <Link href="/" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">Overview</Link>
+          <Link href="/dockets" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">Dockets</Link>
+          <Link href="/trajectory" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">Trajectory</Link>
+          <Link href="/manifest" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">Manifest</Link>
+        </div>
         <div className="flex items-center gap-4">
           <span className="font-mono text-[10px] text-dim-grey hidden sm:inline">
             ● Holding Pattern:{' '}
@@ -125,7 +132,7 @@ export default function CaseDetailPage({ params }) {
               }
             </h2>
 
-            <div className="flex flex-wrap items-center gap-4 md:gap-6 font-mono text-[10px] text-steel-grey mb-12 tracking-[0.14em] uppercase">
+            <div className="flex flex-wrap items-center gap-4 md:gap-6 font-mono text-[10px] text-steel-grey mb-4 tracking-[0.14em] uppercase">
               <span>
                 Case No. <span className="text-off-white">{caseData.id}</span>
               </span>
@@ -142,6 +149,9 @@ export default function CaseDetailPage({ params }) {
                 Velocity {(velocityPct / 100).toFixed(2)} Knots/Docket
               </span>
             </div>
+
+            {/* Why This Estimate Expandable Breakdown */}
+            <WhyEtaBreakdown etaFactors={prediction.etaFactors} />
 
             {/* Journey Timeline */}
             <JourneyTimeline

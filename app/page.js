@@ -2,6 +2,7 @@ import Link from 'next/link';
 import BackgroundVideo from '@/components/BackgroundVideo';
 import SearchBar from '@/components/SearchBar';
 import CaseListRow from '@/components/CaseListRow';
+import NationalPendingCounter from '@/components/NationalPendingCounter';
 import { predictEta, getCaseById, cases } from '@/lib/predictEta';
 
 /**
@@ -64,11 +65,18 @@ export default function LandingPage() {
               </span>
             </div>
             <div className="hidden md:flex items-center gap-8">
-              {['Dockets', 'Trajectory', 'Manifest'].map(item => (
-                <span key={item} className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-off-white transition-colors cursor-pointer">
-                  {item}
-                </span>
-              ))}
+              <Link href="/" className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase font-bold">
+                Overview
+              </Link>
+              <Link href="/dockets" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">
+                Dockets
+              </Link>
+              <Link href="/trajectory" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">
+                Trajectory
+              </Link>
+              <Link href="/manifest" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">
+                Manifest
+              </Link>
             </div>
             <div className="flex items-center gap-3">
               <span className="font-mono text-[10px] text-dim-grey hidden sm:inline">
@@ -86,13 +94,16 @@ export default function LandingPage() {
                 Orbital Jurisdiction Telemetry // Sector India
               </div>
 
-              <h1 className="font-display font-medium text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-[-0.04em] text-off-white leading-[0.95] mb-8">
+              <h1 className="font-display font-medium text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-[-0.04em] text-off-white leading-[0.95] mb-6">
                 Track your case.
                 <br />
                 Like a flight.
               </h1>
 
-              <p className="font-body text-lg text-dim-grey max-w-xl mb-12 leading-relaxed">
+              {/* Supporting Live Pendency Telemetry */}
+              <NationalPendingCounter />
+
+              <p className="font-body text-lg text-dim-grey max-w-xl mb-10 leading-relaxed">
                 Real-time docket telemetry, judicial trajectory mapping, and
                 milestone intelligence designed for precision litigation management.
               </p>
