@@ -103,9 +103,8 @@ Real NJDG/eCourts data integration · WhatsApp delay alerts · regional language
 
 | Name | Role |
 |---|---|
-| *Your Name* | Full-stack / ML |
-| *Teammate* | Frontend / Design |
-| *Teammate* | Data / Backend |
+| *Dhiraj Reddy* | Back-stack / ML |
+| *Brijesh Khanolkar* | Frontend / Design |
 
 <div align="center">
 
