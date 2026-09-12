@@ -5,7 +5,7 @@
 
 **Bitn Build 2026 — GDG Goa × PCCE**
 
-🔗 **[Live Demo](https://courtflight.vercel.app)** &nbsp;·&nbsp; 🎥 **[Demo Video](#)** &nbsp;·&nbsp; 📊 **[Pitch Deck](#)** &nbsp;·&nbsp; 💻 **[GitHub](#)**
+
 
 </div>
 
