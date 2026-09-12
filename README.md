@@ -64,7 +64,7 @@ The Indian judicial system faces a systemic challenge with over **5.02 crore (50
 
 ---
 
-## 🛠️ System Architecture & Tech Stack
+## 🛠️ System Architecture & Tech Stack.
 
 ```
                                   ┌────────────────────────────────────────────────────────┐
