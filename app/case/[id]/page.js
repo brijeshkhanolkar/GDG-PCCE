@@ -24,6 +24,7 @@ export default function CaseDetailPage({ params }) {
 
   const isDisposed = caseData.current_stage === 'Disposed';
   const isHighRisk = prediction.delayRiskLevel === 'High';
+  const turbulence = prediction.turbulence;
 
   const trackerVideoSrc = isDisposed
     ? 'tracker-landed'
@@ -35,7 +36,7 @@ export default function CaseDetailPage({ params }) {
     : '—';
 
   return (
-    <main className="bg-charcoal min-h-screen">
+    <main className="bg-charcoal min-h-screen text-off-white font-body selection:bg-gold selection:text-charcoal">
       {/* Navigation */}
       <nav className="flex items-center justify-between px-6 md:px-16 py-5 border-b border-hairline sticky top-0 z-50 bg-charcoal/95 backdrop-blur-sm">
         <div className="flex items-center gap-4">
@@ -45,24 +46,33 @@ export default function CaseDetailPage({ params }) {
           <span className="text-dim-grey font-mono text-xs hidden sm:inline">//</span>
           <span className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hidden sm:inline">Case Telemetry</span>
         </div>
+
+        <div className="hidden md:flex items-center gap-8">
+          <Link href="/" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">Overview</Link>
+          <Link href="/analyze" className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase border border-gold/40 px-2.5 py-1 hover:bg-gold hover:text-charcoal transition-colors">Analyze Case</Link>
+          <Link href="/dockets" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">Dockets</Link>
+          <Link href="/trajectory" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">Trajectory</Link>
+          <Link href="/manifest" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">Manifest</Link>
+        </div>
+
         <div className="flex items-center gap-4">
           <span className="font-mono text-[10px] text-dim-grey hidden sm:inline">
-            ● <span className={isDisposed ? 'text-gold' : isHighRisk ? 'text-stamp-red' : 'text-gold'}>{isDisposed ? 'Landed' : 'Active'}</span>
+            ● Flight: <span className={isDisposed ? 'text-gold' : isHighRisk ? 'text-stamp-red' : 'text-gold'}>{isDisposed ? 'Landed' : 'In Flight'}</span>
           </span>
           <span className="font-mono text-[10px] text-off-white hidden md:inline">{caseData.id}</span>
-          <span className="font-mono text-[10px] text-gold hidden lg:inline">{prediction.confidence}% confidence</span>
+          <span className="font-mono text-[10px] text-gold hidden lg:inline">{prediction.confidence}% Confidence</span>
         </div>
       </nav>
 
       {/* ─── Section A: Boarding Pass ──────────────────────────────────── */}
-      <section className="px-6 md:px-16 py-12 md:py-20">
+      <section className="px-6 md:px-16 py-12 md:py-16">
         <div className="mb-6 flex items-center justify-between">
           <div className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase flex items-center gap-2">
             <span className="w-2 h-2 bg-gold inline-block" />
-            Official Litigation Manifest
+            Official Litigation Manifest // Departure Stub
           </div>
-          <Link href="/" className="font-mono text-[10px] text-dim-grey hover:text-gold transition-colors tracking-[0.14em] uppercase">
-            ← Back to Overview
+          <Link href="/dockets" className="font-mono text-[10px] text-dim-grey hover:text-gold transition-colors tracking-[0.14em] uppercase">
+            ← Back to Docket Registry
           </Link>
         </div>
         <BoardingPass caseData={caseData} prediction={prediction} />
@@ -74,7 +84,7 @@ export default function CaseDetailPage({ params }) {
           <div className="relative z-10 px-6 md:px-16 py-16 md:py-24 min-h-[70vh] flex flex-col justify-center bg-gradient-to-b from-charcoal/50 via-transparent to-charcoal/80">
             <div className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase mb-4 flex items-center gap-2">
               <span className="w-2 h-2 bg-gold inline-block" />
-              {isDisposed ? 'Docket Resolved' : 'Orbital Docket // Active Trajectory'}
+              {isDisposed ? 'Docket Resolved // Final Disposition' : 'Orbital Docket // Active Trajectory Stream'}
             </div>
 
             <h2 className="font-display font-medium text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[-0.04em] text-off-white leading-[0.95] mb-6">
@@ -95,23 +105,41 @@ export default function CaseDetailPage({ params }) {
               <span className="text-gold">Route {velocityPct}% complete</span>
             </div>
 
-            {/* Confidence + Method badge */}
-            <div className="flex items-center gap-4 mb-12">
-              <div className="border border-hairline-light px-4 py-2 flex items-center gap-3">
-                <span className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase">Confidence</span>
-                <span className={`font-display text-xl ${prediction.confidence >= 70 ? 'text-gold' : prediction.confidence >= 40 ? 'text-off-white' : 'text-stamp-red'}`}>
-                  {prediction.confidence}%
-                </span>
+            {/* Confidence + Turbulence + Method badges */}
+            <div className="flex flex-wrap items-center gap-4 mb-12">
+              {/* Confidence */}
+              <div className="border border-hairline-light px-4 py-2.5 flex items-center gap-3 bg-charcoal/90 backdrop-blur-md">
+                <div className="flex flex-col">
+                  <span className="font-mono text-[9px] text-steel-grey tracking-[0.14em] uppercase">Calibrated Confidence</span>
+                  <span className={`font-display text-xl font-bold ${prediction.confidence >= 70 ? 'text-gold' : prediction.confidence >= 40 ? 'text-off-white' : 'text-stamp-red'}`}>
+                    {prediction.confidence}%
+                  </span>
+                </div>
               </div>
-              <div className="border border-hairline-light px-4 py-2">
-                <span className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase">
-                  Method: <span className="text-gold">{prediction.method === 'cluster' ? 'k-Means Cluster' : 'Cohort Filter'}</span>
-                </span>
+
+              {/* Turbulence */}
+              {turbulence && (
+                <div className={`border px-4 py-2.5 flex items-center gap-3 bg-charcoal/90 backdrop-blur-md ${turbulence.badgeColor || 'border-hairline-light text-gold'}`}>
+                  <div className="flex flex-col">
+                    <span className="font-mono text-[9px] opacity-80 uppercase tracking-[0.14em]">Flight Turbulence</span>
+                    <span className="font-mono text-sm font-semibold flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-current inline-block animate-ping" />
+                      {turbulence.level} ({turbulence.score}/100)
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Method */}
+              <div className="border border-hairline-light px-4 py-2.5 bg-charcoal/90 backdrop-blur-md">
+                <span className="font-mono text-[9px] text-steel-grey tracking-[0.14em] uppercase block">Engine</span>
+                <span className="font-mono text-xs text-gold">k-NN Multi-Dim (k={prediction.k || 15})</span>
               </div>
-              <div className="border border-hairline-light px-4 py-2 hidden md:block">
-                <span className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase">
-                  Pool: <span className="text-off-white">{prediction.matchedClusterSize} cases</span>
-                </span>
+
+              {/* Precedent Pool */}
+              <div className="border border-hairline-light px-4 py-2.5 hidden md:block bg-charcoal/90 backdrop-blur-md">
+                <span className="font-mono text-[9px] text-steel-grey tracking-[0.14em] uppercase block">Cohort Pool</span>
+                <span className="font-mono text-xs text-off-white">{prediction.matchedClusterSize} Precedents</span>
               </div>
             </div>
 
@@ -131,35 +159,44 @@ export default function CaseDetailPage({ params }) {
         <section className="px-6 md:px-16 py-16 md:py-24 bg-charcoal">
           <div className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase mb-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-gold inline-block" />
-            Why This Estimate?
+            Explainable AI // Why This Estimate?
           </div>
           <h2 className="font-display font-medium text-4xl md:text-5xl tracking-[-0.04em] text-off-white mb-4 leading-[0.95]">
-            {prediction.etaRangeYears.median} years.
+            {prediction.etaRangeYears.median} years median resolution.
           </h2>
           <p className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase mb-12">
-            Median resolution time // {prediction.confidence}% confidence // {prediction.matchedClusterSize} similar cases
+            Derived from multi-factor procedural weighting against {prediction.matchedClusterSize} similar historical precedents
           </p>
 
           {/* Factor cards */}
           <div className="space-y-0 border-t border-hairline">
             {prediction.whyFactors.map((factor, idx) => (
               <div key={idx} className="border-b border-hairline py-6 md:py-8 flex flex-col md:flex-row gap-4 md:gap-8">
-                <div className="md:w-[200px] flex-shrink-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`w-2 h-2 inline-block ${
+                <div className="md:w-[240px] flex-shrink-0">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className={`w-2 h-2 inline-block rounded-full ${
                       factor.impact === 'positive' ? 'bg-gold' :
                       factor.impact === 'negative' ? 'bg-stamp-red' :
                       'bg-dim-grey'
                     }`} />
-                    <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-steel-grey">
-                      {factor.impact === 'positive' ? 'Favorable' :
-                       factor.impact === 'negative' ? 'Unfavorable' :
-                       'Neutral'}
+                    <span className={`font-mono text-[10px] tracking-[0.14em] uppercase font-medium ${
+                      factor.impact === 'positive' ? 'text-gold' :
+                      factor.impact === 'negative' ? 'text-stamp-red' :
+                      'text-steel-grey'
+                    }`}>
+                      {factor.impact === 'positive' ? 'Favorable Factor' :
+                       factor.impact === 'negative' ? 'Procedural Friction' :
+                       'Baseline Metric'}
                     </span>
                   </div>
-                  <span className="font-display text-lg text-off-white">
+                  <span className="font-display text-lg text-off-white block">
                     {factor.title}
                   </span>
+                  {factor.metric && (
+                    <span className="font-mono text-xs text-dim-grey mt-0.5 block">
+                      {factor.metric}
+                    </span>
+                  )}
                 </div>
                 <p className="font-body text-sm text-dim-grey leading-relaxed flex-1">
                   {factor.detail}
@@ -169,32 +206,32 @@ export default function CaseDetailPage({ params }) {
           </div>
 
           {/* ETA Range visualization */}
-          <div className="mt-12 pt-8 border-t border-hairline">
+          <div className="mt-14 pt-8 border-t border-hairline">
             <span className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase block mb-6">
-              Estimated Resolution Window
+              Empirical Resolution Quartiles // Range Telemetry
             </span>
             <div className="flex items-end gap-0 max-w-2xl">
               <div className="flex-1 text-center border-r border-hairline-light pb-4">
-                <span className="font-display text-3xl md:text-4xl text-steel-grey block">{prediction.etaRangeYears.p25}</span>
-                <span className="font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase block mt-1">Fastest 25%</span>
+                <span className="font-display text-3xl md:text-4xl text-steel-grey block">{prediction.etaRangeYears.p25} yrs</span>
+                <span className="font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase block mt-1">25th Percentile (Fastest)</span>
                 <span className="font-mono text-[10px] text-dim-grey block">{formatDate(prediction.etaDateRange.earliest)}</span>
               </div>
-              <div className="flex-1 text-center border-r border-hairline-light pb-4 bg-surface-dim -mb-4 pt-4">
-                <span className="font-display text-4xl md:text-5xl text-gold block">{prediction.etaRangeYears.median}</span>
-                <span className="font-mono text-[10px] text-off-white tracking-[0.14em] uppercase block mt-1 font-bold">Median</span>
+              <div className="flex-1 text-center border-r border-hairline-light pb-4 bg-surface-dim -mb-4 pt-4 border border-gold/30">
+                <span className="font-display text-4xl md:text-5xl text-gold block font-semibold">{prediction.etaRangeYears.median} yrs</span>
+                <span className="font-mono text-[10px] text-off-white tracking-[0.14em] uppercase block mt-1 font-bold">Likely Resolution (Median)</span>
                 <span className="font-mono text-[10px] text-gold block">{formatDate(prediction.etaDateRange.likely)}</span>
               </div>
               <div className="flex-1 text-center pb-4">
-                <span className="font-display text-3xl md:text-4xl text-stamp-red block">{prediction.etaRangeYears.p75}</span>
-                <span className="font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase block mt-1">Slowest 25%</span>
+                <span className="font-display text-3xl md:text-4xl text-stamp-red block">{prediction.etaRangeYears.p75} yrs</span>
+                <span className="font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase block mt-1">75th Percentile (Lagging)</span>
                 <span className="font-mono text-[10px] text-dim-grey block">{formatDate(prediction.etaDateRange.latest)}</span>
               </div>
             </div>
-            <div className="h-[3px] bg-hairline-light max-w-2xl mt-2 relative">
+            <div className="h-[3px] bg-hairline-light max-w-2xl mt-4 relative">
               <div className="absolute left-0 h-full bg-steel-grey" style={{ width: '25%' }} />
               <div className="absolute left-1/4 h-full bg-gold" style={{ width: '25%' }} />
               <div className="absolute left-1/2 h-full bg-gold/50" style={{ width: '25%' }} />
-              <div className="absolute left-3/4 h-full bg-stamp-red/30" style={{ width: '25%' }} />
+              <div className="absolute left-3/4 h-full bg-stamp-red/40" style={{ width: '25%' }} />
             </div>
           </div>
         </section>
@@ -213,7 +250,7 @@ export default function CaseDetailPage({ params }) {
           </h2>
 
           <p className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase mb-12">
-            Cluster average: {prediction.clusterAvgAdjournments} // Risk: {prediction.delayRiskLevel}
+            Cohort benchmark average: {prediction.clusterAvgAdjournments} // Procedural turbulence: {turbulence?.level || prediction.delayRiskLevel}
           </p>
 
           <div className="border-t border-gold/20">
@@ -242,8 +279,8 @@ export default function CaseDetailPage({ params }) {
       <footer className="px-6 md:px-16 py-8 border-t border-hairline bg-charcoal">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="font-body text-xs text-dim-grey max-w-2xl leading-relaxed">
-            Prediction via {prediction.method === 'cluster' ? 'k-means clustering' : 'cohort filtering'} against {prediction.matchedClusterSize} similar cases.
-            Confidence: {prediction.confidence}%. Built on synthetic data — swappable with live eCourts/NJDG.
+            Multi-dimensional k-NN prediction calibrated across {prediction.matchedClusterSize} precedent cases.
+            Confidence: {prediction.confidence}%. Built on synthetic data with real public benchmark validation.
           </p>
           <span className="font-mono text-[10px] text-dim-grey tracking-[0.14em] uppercase">
             Ref: {caseData.id}

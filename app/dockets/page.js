@@ -60,6 +60,9 @@ export default function DocketsPage() {
           <Link href="/" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">
             Overview
           </Link>
+          <Link href="/analyze" className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase border border-gold/40 px-2.5 py-1 hover:bg-gold hover:text-charcoal transition-colors">
+            Analyze Case
+          </Link>
           <Link href="/dockets" className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase font-bold">
             Dockets
           </Link>

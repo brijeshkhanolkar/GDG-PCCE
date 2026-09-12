@@ -13,7 +13,7 @@ const STAGES = [
 ];
 
 /**
- * StageDurationComparison — Feature 5 two-bar visual
+ * StageDurationComparison — Two-bar milestone comparison
  * Compares current case duration at this stage against cluster average.
  */
 function StageDurationComparison({ stageComparison, alignRight = false }) {
@@ -31,7 +31,7 @@ function StageDurationComparison({ stageComparison, alignRight = false }) {
       {/* Your Case Bar */}
       <div>
         <div className="flex justify-between items-center text-[10px] font-mono tracking-[0.12em] uppercase mb-1">
-          <span className="text-gold font-semibold">Your case</span>
+          <span className="text-gold font-semibold">Your case cadence</span>
           <span className="text-off-white font-mono font-medium">
             {userMonths} {userMonths === 1 ? 'month' : 'months'}
           </span>
@@ -47,7 +47,7 @@ function StageDurationComparison({ stageComparison, alignRight = false }) {
       {/* Cluster Average Bar */}
       <div>
         <div className="flex justify-between items-center text-[10px] font-mono tracking-[0.12em] uppercase mb-1">
-          <span className="text-steel-grey">Cluster Average</span>
+          <span className="text-steel-grey">Cohort Benchmark</span>
           <span className="text-steel-grey font-mono">
             {avgMonths} {avgMonths === 1 ? 'month' : 'months'}
           </span>
@@ -83,6 +83,7 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction }
 
   const currentStageIndex = STAGES.indexOf(currentStage) === -1 ? 0 : STAGES.indexOf(currentStage);
   const isDisposed = currentStage === 'Disposed';
+  const turbulence = prediction?.turbulence;
 
   const getStageDate = (index) => {
     if (!filingDate) return '';
@@ -93,17 +94,17 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction }
       return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }
     if (index === currentStageIndex) {
-      return `Milestone active since ${new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+      return `Cruising active since ${new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
     }
-    return 'Projected';
+    return 'Projected milestone';
   };
 
   return (
     <div className="relative py-12 max-w-5xl mx-auto w-full" ref={containerRef}>
-      {/* Central Spine Line */}
-      <div className="absolute left-6 md:left-[50%] -translate-x-[50%] top-0 bottom-0 w-[2px] bg-gradient-to-b from-gold via-hairline-light to-hairline/40 z-0" />
+      {/* Central Flight Route Spine Line */}
+      <div className="absolute left-6 md:left-[50%] -translate-x-[50%] top-0 bottom-0 w-[2px] bg-gradient-to-b from-gold via-hairline-light to-hairline/30 z-0" />
       
-      <div className="flex flex-col gap-10 relative z-10">
+      <div className="flex flex-col gap-12 relative z-10">
         {STAGES.map((stage, idx) => {
           const isPast = idx < currentStageIndex;
           const isCurrent = idx === currentStageIndex;
@@ -115,23 +116,36 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction }
 
           return (
             <div key={idx} className={`${stageClass} relative flex flex-col md:flex-row items-start md:items-center w-full`}>
-              {/* Central Node Badge / Seal Dot */}
+              {/* Central Node Badge — Displays Airplane on Current Stage */}
               <div className="absolute left-6 md:left-[50%] -translate-x-[50%] z-20 flex items-center justify-center">
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center bg-charcoal border-2 transition-all duration-300 ${
-                  isCurrent 
-                    ? 'border-gold ring-4 ring-gold/20 shadow-[0_0_16px_rgba(201,162,75,0.6)]' 
-                    : isPast 
+                {isCurrent ? (
+                  <div className="relative flex items-center justify-center">
+                    {/* Radar Pulse Ring */}
+                    <span className="absolute w-12 h-12 rounded-full bg-gold/25 animate-ping pointer-events-none" />
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-charcoal border-2 border-gold ring-4 ring-gold/30 shadow-[0_0_24px_rgba(201,162,75,0.75)] z-10">
+                      {/* Airplane Flight Glyph */}
+                      <svg 
+                        className="w-5 h-5 text-gold transform -rotate-45 translate-x-[1px] translate-y-[-1px] filter drop-shadow-[0_0_4px_rgba(201,162,75,0.9)]" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor"
+                      >
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                      </svg>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center bg-charcoal border-2 transition-all duration-300 ${
+                    isPast 
                       ? 'border-gold/70 bg-gold/10' 
                       : 'border-hairline-light bg-surface-dim'
-                }`}>
-                  <div className={`rounded-full transition-all duration-300 ${
-                    isCurrent 
-                      ? 'w-2.5 h-2.5 bg-gold' 
-                      : isPast 
+                  }`}>
+                    <div className={`rounded-full transition-all duration-300 ${
+                      isPast 
                         ? 'w-2 h-2 bg-gold/80' 
                         : 'w-1.5 h-1.5 bg-steel-grey/40'
-                  }`} />
-                </div>
+                    }`} />
+                  </div>
+                )}
               </div>
 
               {/* Content Left (Mobile: right of central dot, Desktop: left column) */}
@@ -147,8 +161,13 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction }
                     <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-1.5 flex items-center gap-2 ${
                       isCurrent ? 'text-gold font-bold md:justify-end' : isPast ? 'text-steel-grey md:justify-end' : 'text-dim-grey md:justify-end'
                     }`}>
-                      {isCurrent && <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse inline-block" />}
-                      Stage {String(idx + 1).padStart(2, '0')} // {isCurrent ? 'ACTIVE' : isPast ? 'COMPLETED' : 'PROJECTED'}
+                      {isCurrent && (
+                        <span className="inline-flex items-center gap-1.5 text-gold px-2 py-0.5 bg-gold/10 border border-gold/30">
+                          <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse inline-block" />
+                          AIRPLANE IN FLIGHT
+                        </span>
+                      )}
+                      <span>Stage {String(idx + 1).padStart(2, '0')} // {isCurrent ? 'ACTIVE HOLD' : isPast ? 'COMPLETED' : 'PROJECTED'}</span>
                     </div>
 
                     <div className={`font-display ${
@@ -160,6 +179,15 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction }
                     }`}>
                       {stage}
                     </div>
+
+                    {/* Turbulence Indicator for Current Stage */}
+                    {isCurrent && turbulence && (
+                      <div className={`mt-2.5 inline-flex items-center gap-2 px-2.5 py-1 border text-[10px] font-mono uppercase tracking-[0.12em] ${turbulence.badgeColor || 'border-gold/30 text-gold bg-gold/10'} md:ml-auto`}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-current inline-block animate-ping" />
+                        <span>{turbulence.level}</span>
+                        <span className="text-dim-grey">({turbulence.score}/100 FRICTION)</span>
+                      </div>
+                    )}
 
                     <div className={`font-mono text-xs mt-2 ${
                       isCurrent ? 'text-gold font-medium' : isPast ? 'text-steel-grey' : 'text-dim-grey'
@@ -193,8 +221,13 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction }
                     <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-1.5 flex items-center gap-2 ${
                       isCurrent ? 'text-gold font-bold' : isPast ? 'text-steel-grey' : 'text-dim-grey'
                     }`}>
-                      {isCurrent && <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse inline-block" />}
-                      Stage {String(idx + 1).padStart(2, '0')} // {isCurrent ? 'ACTIVE' : isPast ? 'COMPLETED' : 'PROJECTED'}
+                      {isCurrent && (
+                        <span className="inline-flex items-center gap-1.5 text-gold px-2 py-0.5 bg-gold/10 border border-gold/30">
+                          <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse inline-block" />
+                          AIRPLANE IN FLIGHT
+                        </span>
+                      )}
+                      <span>Stage {String(idx + 1).padStart(2, '0')} // {isCurrent ? 'ACTIVE HOLD' : isPast ? 'COMPLETED' : 'PROJECTED'}</span>
                     </div>
 
                     <div className={`font-display ${
@@ -206,6 +239,15 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction }
                     }`}>
                       {stage}
                     </div>
+
+                    {/* Turbulence Indicator for Current Stage */}
+                    {isCurrent && turbulence && (
+                      <div className={`mt-2.5 inline-flex items-center gap-2 px-2.5 py-1 border text-[10px] font-mono uppercase tracking-[0.12em] ${turbulence.badgeColor || 'border-gold/30 text-gold bg-gold/10'}`}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-current inline-block animate-ping" />
+                        <span>{turbulence.level}</span>
+                        <span className="text-dim-grey">({turbulence.score}/100 FRICTION)</span>
+                      </div>
+                    )}
 
                     <div className={`font-mono text-xs mt-2 ${
                       isCurrent ? 'text-gold font-medium' : isPast ? 'text-steel-grey' : 'text-dim-grey'
@@ -234,7 +276,7 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction }
         <div className="mt-16 text-center">
           <div className="inline-flex items-center gap-2 px-6 py-2.5 bg-charcoal/90 backdrop-blur-md border border-hairline font-mono text-xs text-steel-grey tracking-[0.12em] uppercase shadow-lg">
             <span className="w-2 h-2 rounded-full bg-gold/80 inline-block" />
-            Based on empirical analysis of {prediction.matchedClusterSize.toLocaleString()} similar dockets
+            Empirical telemetry calibrated across {prediction.matchedClusterSize.toLocaleString()} precedents in cohort
           </div>
         </div>
       )}

@@ -67,6 +67,9 @@ export default function LandingPage() {
               <Link href="/" className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase font-bold">
                 Overview
               </Link>
+              <Link href="/analyze" className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase border border-gold/40 px-2.5 py-1 hover:bg-gold hover:text-charcoal transition-colors">
+                Analyze Case
+              </Link>
               <Link href="/dockets" className="font-mono text-[10px] text-steel-grey tracking-[0.14em] uppercase hover:text-gold transition-colors">
                 Dockets
               </Link>
@@ -106,6 +109,18 @@ export default function LandingPage() {
               </p>
 
               <SearchBar caseIds={allCaseIds} />
+
+              {/* Custom Case Dispatch CTA */}
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-xs font-mono">
+                <span className="text-dim-grey">Have a case not in the registry?</span>
+                <Link
+                  href="/analyze"
+                  className="inline-flex items-center gap-2 text-gold hover:text-off-white transition-colors underline underline-offset-4 decoration-gold/60"
+                >
+                  <span>Launch Custom Case Dispatch Terminal (k-NN)</span>
+                  <span>→</span>
+                </Link>
+              </div>
             </div>
 
             {/* Right column — telemetry panel (desktop only) */}
