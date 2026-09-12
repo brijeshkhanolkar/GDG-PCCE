@@ -3,108 +3,67 @@
 # ✈️ CourtFlight
 ### Track your case. Like a flight.
 
-**A flight-tracker for India's 5+ crore pending court cases.**
-Built in 48 hours at **Bitn Build**, GDG Goa × PCCE.
+**Bitn Build 2026 — GDG Goa × PCCE**
 
-🔗 **[Live Demo](#)** · 🎥 **[Demo Video](#)** · 📊 **[Pitch Deck](#)**
+🔗 **[Live Demo](https://courtflight.vercel.app)** &nbsp;·&nbsp; 🎥 **[Demo Video](#)** &nbsp;·&nbsp; 📊 **[Pitch Deck](#)** &nbsp;·&nbsp; 💻 **[GitHub](#)**
 
 </div>
 
----
+<br>
 
-## 🚨 The Problem
+<div align="center">
 
-India has **5.02 crore+ pending court cases**. Litigants have no idea:
-- When their case will actually be resolved
-- Whether it's delayed compared to similar cases
-- What stage comes next, and how long it usually takes
+## 🚨 4.76 Cr+ cases pending across India.
+### Every citizen gets the same answer: **"Pending."** No ETA. No context. No visibility.
 
-We call this **pendency opacity** — it's confusing, opaque, and it affects millions of people with zero legal background.
+</div>
 
-## 💡 The Solution
+<br>
 
-**CourtFlight** turns a court case into something everyone already understands: **a flight tracker.**
+## 💡 The Idea
+
+CourtFlight turns a court case into a **flight tracker**. Enter a case ID → get a live ETA, a delay-risk level, and a plain-English "why" — computed by matching your case against 1,565 modeled historical dockets, not a hardcoded guess.
 
 | Legal Reality | CourtFlight |
 |---|---|
-| Filing & appellate court | Departure & destination airport |
+| Filing → Appellate court | Departure → Destination airport |
 | 7 procedural stages | Flight waypoints |
 | Predicted disposal date | ETA (p25 / median / p75) |
 | Adjournments | Delays & turbulence |
 | Case summary | Downloadable Boarding Pass |
 
-Enter a case ID → get a live ETA, a risk level, and a plain-English explanation of *why* — backed by real machine learning on historical case outcomes, not a hardcoded guess.
+## 🧠 How It's Predicted
 
----
+**33-D feature vector → K-Means cluster match → nearest disposed precedents → percentile ETA → confidence score.**
 
-## 🧠 How It Works (the ML, in 30 seconds)
+No black box: every prediction returns 5 human-readable reasons, and confidence drops honestly when precedent match is weak.
 
-1. Every case → **33-dimensional feature vector** (type, court, jurisdiction, age, adjournments, stage)
-2. **K-Means++ clustering** groups similar cases into cohorts
-3. **Weighted k-NN (k=15)** finds the closest *disposed* precedent cases
-4. ETA = **real percentile outcomes** (p25 / median / p75) from those neighbors — not a fake number
-5. **Confidence score** shrinks automatically when precedent match is weak — no fake "99% accurate" claims
-6. Every prediction ships with **5 human-readable "why" factors**
+## 🖥️ What's Live
 
-✅ Verified by a **52/52 passing automated test suite** (`node scripts/test-predict.js`)
-
----
-
-## 🖥️ What's Built
-
-- **Landing Radar** — live pendency ticker + case search
-- **Case Boarding Pass** — a luxury, downloadable PNG ticket for any case
-- **Journey Timeline** — 7-stage animated progress tracker with delay ledger
-- **Trajectory Analytics** — fleet-wide bottleneck & court efficiency stats
-- **Dockets Registry** — searchable, filterable table of 1,565+ cases
-- **Live Prediction API** — `GET/POST /api/predict`, try it yourself:
-
-```bash
-GET /api/predict?id=NYR-00001
-```
-```json
-{ "etaRangeYears": { "p25": 3.9, "median": 4.1, "p75": 5.1 },
-  "delayRiskLevel": "High", "confidence": 55 }
-```
-
----
+Radar landing with real-time search · downloadable Boarding Pass · 7-stage journey timeline with delay ledger · fleet-wide trajectory analytics · filterable dockets registry · a public prediction API (`GET /api/predict?id=...`) — **no login required, try it now.**
 
 ## 🏗️ Tech Stack
 
-**Next.js 14** (App Router) · **Tailwind CSS** · **html-to-image** (PNG export) · **Zero-database architecture** — 1,565+ case records precomputed to static JSON, deployed 100% serverless on Vercel Edge for instant, cost-free demos.
+**Next.js 14 · Tailwind CSS · zero-database JSON architecture · K-Means clustering · Vercel**
 
----
+| Dhiraj Reddy | Brijesh Khanolkar |
+|---|---|
+| ML & Backend — clustering, prediction engine, API | Frontend & Design — UI, boarding pass, timeline |
 
-## 🚀 Run It Locally
+## 🚀 Run Locally
 
 ```bash
 git clone <repo-url> && cd courtflight
-npm install
-node scripts/test-predict.js   # verify the ML engine
-npm run dev                    # → http://localhost:3000
+npm install && npm run dev   # → localhost:3000
 ```
-Requires Node.js 18.17+ or 20+. No login/auth required — everything is open to try.
+
+## 📈 What's Next
+
+Live eCourts/NJDG data · WhatsApp delay alerts · regional languages · lawyer dashboard.
+
+*Historical similarity informs a range — it doesn't guarantee an outcome.*
 
 ---
-
-## 🎨 Design
-
-A custom dark, gold-accented "Sovereign Juris" theme — circular stamp seals instead of status pills, editorial typography, cinematic video moments — built to feel authoritative, like a justice-system product should.
-
----
-
-## 🔮 What's Next
-
-Real NJDG/eCourts data integration · WhatsApp delay alerts · regional language support · a lawyer-facing bulk dashboard.
-
----
-
-## 👥 Team
-
-| Name | Role |
-|---|---|
-| *Dhiraj Reddy* | Back-stack / ML |
-| *Brijesh Khanolkar* | Frontend / Design |
 
 <div align="center">
 
