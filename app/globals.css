@@ -87,10 +87,10 @@ select,
   transform: translateY(0);
 }
 .timeline-stage.future-stage {
-  opacity: 0.2 !important;
+  opacity: 0.55 !important;
 }
 .timeline-stage.future-stage.revealed {
-  opacity: 0.2 !important;
+  opacity: 0.55 !important;
   transform: translateY(0);
 }
 
@@ -108,7 +108,7 @@ select,
     transition: none !important;
   }
   .timeline-stage.future-stage {
-    opacity: 0.2 !important;
+    opacity: 0.55 !important;
   }
 }
 

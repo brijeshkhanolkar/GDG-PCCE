@@ -70,8 +70,8 @@ export default function CaseDetailPage({ params }) {
 
       {/* ─── Section B: Tracker Hero ───────────────────────────────────── */}
       <section className="relative">
-        <BackgroundVideo src={trackerVideoSrc} overlayOpacity={0.6} className="relative w-full min-h-[70vh]">
-          <div className="relative z-10 px-6 md:px-16 py-16 md:py-24 min-h-[70vh] flex flex-col justify-center">
+        <BackgroundVideo src={trackerVideoSrc} overlayOpacity={0.82} className="relative w-full min-h-[70vh]">
+          <div className="relative z-10 px-6 md:px-16 py-16 md:py-24 min-h-[70vh] flex flex-col justify-center bg-gradient-to-b from-charcoal/50 via-transparent to-charcoal/80">
             <div className="font-mono text-[10px] text-gold tracking-[0.14em] uppercase mb-4 flex items-center gap-2">
               <span className="w-2 h-2 bg-gold inline-block" />
               {isDisposed ? 'Docket Resolved' : 'Orbital Docket // Active Trajectory'}

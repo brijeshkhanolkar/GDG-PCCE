@@ -23,22 +23,22 @@ function StageDurationComparison({ stageComparison, alignRight = false }) {
   const avgMonths = stageComparison.avgTimeAtStageForClusterMonths || 1;
   const maxMonths = Math.max(userMonths, avgMonths, 1);
 
-  const userPct = Math.max(6, Math.min(100, Math.round((userMonths / maxMonths) * 100)));
-  const avgPct = Math.max(6, Math.min(100, Math.round((avgMonths / maxMonths) * 100)));
+  const userPct = Math.max(8, Math.min(100, Math.round((userMonths / maxMonths) * 100)));
+  const avgPct = Math.max(8, Math.min(100, Math.round((avgMonths / maxMonths) * 100)));
 
   return (
-    <div className={`mt-3 pt-2.5 border-t border-hairline/60 w-full max-w-[280px] flex flex-col gap-2.5 ${alignRight ? 'md:ml-auto' : ''}`}>
+    <div className={`mt-3.5 pt-3 border-t border-hairline/80 w-full max-w-[320px] flex flex-col gap-2.5 bg-surface-dim/95 p-3 border border-hairline ${alignRight ? 'md:ml-auto' : ''}`}>
       {/* Your Case Bar */}
       <div>
-        <div className="flex justify-between items-center text-[10px] font-mono tracking-[0.1em] uppercase mb-1">
-          <span className="text-gold">Your case</span>
-          <span className="text-off-white font-medium">
+        <div className="flex justify-between items-center text-[10px] font-mono tracking-[0.12em] uppercase mb-1">
+          <span className="text-gold font-semibold">Your case</span>
+          <span className="text-off-white font-mono font-medium">
             {userMonths} {userMonths === 1 ? 'month' : 'months'}
           </span>
         </div>
-        <div className="h-[2px] bg-charcoal/90 w-full overflow-hidden">
+        <div className="h-[3px] bg-charcoal w-full overflow-hidden border border-hairline/60">
           <div
-            className="h-full bg-gold transition-all duration-500"
+            className="h-full bg-gold transition-all duration-500 shadow-[0_0_8px_rgba(201,162,75,0.6)]"
             style={{ width: `${userPct}%` }}
           />
         </div>
@@ -46,15 +46,15 @@ function StageDurationComparison({ stageComparison, alignRight = false }) {
 
       {/* Cluster Average Bar */}
       <div>
-        <div className="flex justify-between items-center text-[10px] font-mono tracking-[0.1em] uppercase mb-1">
-          <span className="text-steel-grey">Average</span>
-          <span className="text-dim-grey">
+        <div className="flex justify-between items-center text-[10px] font-mono tracking-[0.12em] uppercase mb-1">
+          <span className="text-steel-grey">Cluster Average</span>
+          <span className="text-steel-grey font-mono">
             {avgMonths} {avgMonths === 1 ? 'month' : 'months'}
           </span>
         </div>
-        <div className="h-[2px] bg-charcoal/90 w-full overflow-hidden">
+        <div className="h-[3px] bg-charcoal w-full overflow-hidden border border-hairline/60">
           <div
-            className="h-full bg-dim-grey transition-all duration-500"
+            className="h-full bg-steel-grey/70 transition-all duration-500"
             style={{ width: `${avgPct}%` }}
           />
         </div>
@@ -63,7 +63,7 @@ function StageDurationComparison({ stageComparison, alignRight = false }) {
   );
 }
 
-export default function JourneyTimeline({ currentStage, filingDate, prediction, adjournmentReasons = [] }) {
+export default function JourneyTimeline({ currentStage, filingDate, prediction }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -93,16 +93,17 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
       return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }
     if (index === currentStageIndex) {
-      return `Commenced ${new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+      return `Milestone active since ${new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
     }
-    return '';
+    return 'Projected';
   };
 
   return (
-    <div className="relative py-8" ref={containerRef}>
-      <div className="absolute left-6 md:left-[50%] top-0 bottom-0 w-[1px] bg-surface-dim" />
+    <div className="relative py-12 max-w-5xl mx-auto w-full" ref={containerRef}>
+      {/* Central Spine Line */}
+      <div className="absolute left-6 md:left-[50%] -translate-x-[50%] top-0 bottom-0 w-[2px] bg-gradient-to-b from-gold via-hairline-light to-hairline/40 z-0" />
       
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-10 relative z-10">
         {STAGES.map((stage, idx) => {
           const isPast = idx < currentStageIndex;
           const isCurrent = idx === currentStageIndex;
@@ -114,26 +115,58 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
 
           return (
             <div key={idx} className={`${stageClass} relative flex flex-col md:flex-row items-start md:items-center w-full`}>
-              {/* Central Node / Dot */}
-              <div className="absolute left-6 md:left-[50%] -translate-x-[50%] bg-charcoal p-1">
-                <div className={`status-seal-dot w-3 h-3 ${isPast || isCurrent ? 'bg-gold' : 'bg-surface-mid'}`} />
+              {/* Central Node Badge / Seal Dot */}
+              <div className="absolute left-6 md:left-[50%] -translate-x-[50%] z-20 flex items-center justify-center">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center bg-charcoal border-2 transition-all duration-300 ${
+                  isCurrent 
+                    ? 'border-gold ring-4 ring-gold/20 shadow-[0_0_16px_rgba(201,162,75,0.6)]' 
+                    : isPast 
+                      ? 'border-gold/70 bg-gold/10' 
+                      : 'border-hairline-light bg-surface-dim'
+                }`}>
+                  <div className={`rounded-full transition-all duration-300 ${
+                    isCurrent 
+                      ? 'w-2.5 h-2.5 bg-gold' 
+                      : isPast 
+                        ? 'w-2 h-2 bg-gold/80' 
+                        : 'w-1.5 h-1.5 bg-steel-grey/40'
+                  }`} />
+                </div>
               </div>
 
-              {/* Content Left (Mobile: right of dot, Desktop: left half) */}
-              <div className="w-full md:w-1/2 pl-12 md:pl-0 md:pr-12 text-left md:text-right flex flex-col justify-center min-h-[3rem]">
+              {/* Content Left (Mobile: right of central dot, Desktop: left column) */}
+              <div className="w-full md:w-1/2 pl-16 md:pl-0 md:pr-10 text-left md:text-right flex flex-col justify-center min-h-[3.5rem]">
                 {idx % 2 === 0 ? (
-                  <>
-                    <div className="font-mono text-[10px] uppercase text-gold-light mb-1">
-                      Stage {String(idx + 1).padStart(2, '0')}
+                  <div className={`p-5 md:p-6 border transition-all duration-300 ${
+                    isCurrent 
+                      ? 'bg-charcoal/95 backdrop-blur-xl border-gold/80 shadow-[0_8px_32px_rgba(0,0,0,0.85)] ring-1 ring-gold/40' 
+                      : isPast 
+                        ? 'bg-charcoal/90 backdrop-blur-md border-hairline-light/90 hover:border-gold/40 shadow-[0_4px_20px_rgba(0,0,0,0.7)]' 
+                        : 'bg-charcoal/80 backdrop-blur-md border-hairline/60 shadow-md'
+                  }`}>
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-1.5 flex items-center gap-2 ${
+                      isCurrent ? 'text-gold font-bold md:justify-end' : isPast ? 'text-steel-grey md:justify-end' : 'text-dim-grey md:justify-end'
+                    }`}>
+                      {isCurrent && <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse inline-block" />}
+                      Stage {String(idx + 1).padStart(2, '0')} // {isCurrent ? 'ACTIVE' : isPast ? 'COMPLETED' : 'PROJECTED'}
                     </div>
-                    <div className={`font-display text-lg ${isCurrent ? 'text-bone-white font-medium' : isPast ? 'text-off-white' : 'text-surface-mid'}`}>
+
+                    <div className={`font-display ${
+                      isCurrent 
+                        ? 'text-xl md:text-2xl text-off-white font-medium tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]' 
+                        : isPast 
+                          ? 'text-lg md:text-xl text-off-white font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]' 
+                          : 'text-base md:text-lg text-steel-grey/90 font-normal'
+                    }`}>
                       {stage}
                     </div>
-                    {(isPast || isCurrent) && (
-                      <div className="font-mono text-xs text-dim-grey mt-1">
-                        {getStageDate(idx)}
-                      </div>
-                    )}
+
+                    <div className={`font-mono text-xs mt-2 ${
+                      isCurrent ? 'text-gold font-medium' : isPast ? 'text-steel-grey' : 'text-dim-grey'
+                    }`}>
+                      {getStageDate(idx)}
+                    </div>
+
                     {/* Stage duration comparison for even index */}
                     {showComparison && (
                       <StageDurationComparison
@@ -141,27 +174,45 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
                         alignRight={true}
                       />
                     )}
-                  </>
+                  </div>
                 ) : (
                   <div className="hidden md:block" />
                 )}
               </div>
 
-              {/* Content Right (Mobile: same side, Desktop: right half) */}
-              <div className="w-full md:w-1/2 pl-12 md:pl-12 flex flex-col justify-center min-h-[3rem] mt-2 md:mt-0">
+              {/* Content Right (Mobile: same side, Desktop: right column) */}
+              <div className="w-full md:w-1/2 pl-16 md:pl-10 flex flex-col justify-center min-h-[3.5rem] mt-3 md:mt-0">
                 {idx % 2 !== 0 ? (
-                  <>
-                    <div className="font-mono text-[10px] uppercase text-gold-light mb-1 md:hidden">
-                      Stage {String(idx + 1).padStart(2, '0')}
+                  <div className={`p-5 md:p-6 border transition-all duration-300 ${
+                    isCurrent 
+                      ? 'bg-charcoal/95 backdrop-blur-xl border-gold/80 shadow-[0_8px_32px_rgba(0,0,0,0.85)] ring-1 ring-gold/40' 
+                      : isPast 
+                        ? 'bg-charcoal/90 backdrop-blur-md border-hairline-light/90 hover:border-gold/40 shadow-[0_4px_20px_rgba(0,0,0,0.7)]' 
+                        : 'bg-charcoal/80 backdrop-blur-md border-hairline/60 shadow-md'
+                  }`}>
+                    <div className={`font-mono text-[10px] uppercase tracking-[0.16em] mb-1.5 flex items-center gap-2 ${
+                      isCurrent ? 'text-gold font-bold' : isPast ? 'text-steel-grey' : 'text-dim-grey'
+                    }`}>
+                      {isCurrent && <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse inline-block" />}
+                      Stage {String(idx + 1).padStart(2, '0')} // {isCurrent ? 'ACTIVE' : isPast ? 'COMPLETED' : 'PROJECTED'}
                     </div>
-                    <div className={`font-display text-lg md:text-xl ${isCurrent ? 'text-bone-white font-medium' : isPast ? 'text-off-white' : 'text-surface-mid'}`}>
+
+                    <div className={`font-display ${
+                      isCurrent 
+                        ? 'text-xl md:text-2xl text-off-white font-medium tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]' 
+                        : isPast 
+                          ? 'text-lg md:text-xl text-off-white font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]' 
+                          : 'text-base md:text-lg text-steel-grey/90 font-normal'
+                    }`}>
                       {stage}
                     </div>
-                    {(isPast || isCurrent) && (
-                      <div className="font-mono text-xs text-dim-grey mt-1">
-                        {getStageDate(idx)}
-                      </div>
-                    )}
+
+                    <div className={`font-mono text-xs mt-2 ${
+                      isCurrent ? 'text-gold font-medium' : isPast ? 'text-steel-grey' : 'text-dim-grey'
+                    }`}>
+                      {getStageDate(idx)}
+                    </div>
+
                     {/* Stage duration comparison for odd index */}
                     {showComparison && (
                       <StageDurationComparison
@@ -169,7 +220,7 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
                         alignRight={false}
                       />
                     )}
-                  </>
+                  </div>
                 ) : (
                   <div className="hidden md:block" />
                 )}
@@ -180,8 +231,11 @@ export default function JourneyTimeline({ currentStage, filingDate, prediction, 
       </div>
       
       {prediction?.matchedClusterSize && (
-        <div className="mt-16 text-center font-mono text-xs text-dim-grey">
-          Based on analysis of {prediction.matchedClusterSize.toLocaleString()} similar cases
+        <div className="mt-16 text-center">
+          <div className="inline-flex items-center gap-2 px-6 py-2.5 bg-charcoal/90 backdrop-blur-md border border-hairline font-mono text-xs text-steel-grey tracking-[0.12em] uppercase shadow-lg">
+            <span className="w-2 h-2 rounded-full bg-gold/80 inline-block" />
+            Based on empirical analysis of {prediction.matchedClusterSize.toLocaleString()} similar dockets
+          </div>
         </div>
       )}
     </div>
